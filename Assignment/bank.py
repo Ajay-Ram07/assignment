@@ -1,4 +1,111 @@
 # Unicom Online Banking Application===============================================================================================
+
+
+#viva Enhanzements----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Exam 03
+
+#===============================================================================================================================================================================
+'''
+Question : 01: 
+Show Current Date 
+Description: Add a menu option to display the current date in the format “YYYY-MM-DD”. 
+Purpose: Introduces the datetime module and basic date handling. '''
+
+#Resonse -
+import os
+from datetime import datetime 
+
+def show_current_date():
+    print("Date:", datetime.now().strftime("%Y-%m-%d"))
+
+#======================================================================================================================================================================================
+
+
+'''
+Question : 02:
+Uppercase Customer Name 
+Description: Automatically convert the customer name to title case (e.g., “brintha balakumar” 
+to “Brintha Balakumar”) during account creation. 
+Purpose: Introduces string methods.'''
+
+#Response
+
+def createAccount():
+
+    print("\n-*-*-*-*-*-Create [Unicom-Online-Banking] Account-*-*-*-*-*-*-")
+
+    name = input("Enter Your username For Creating Account :").strip().title() #My Update is Here - [Adding tittle() For Get Uppercase User Name]
+    password = input("Create a Password For your Account :").strip()
+
+    while True:
+
+        try:
+
+            firstDep = float(input("Enter Your Account Opening Amount [Minimum 500.00] :"))
+
+            if firstDep < 500:
+                print("Please Deposit 500.00 or more than 500.00 for Creating Account !")
+
+            else:
+                break
+
+        except ValueError:
+            print("Please enter Valid Value For Deposit !!!")
+
+    accountNumber = generateAc_num()
+
+    with open("accountDetails.txt", "a") as file:
+        file.write(f"{accountNumber},{name},{password},{firstDep}\n")
+
+    print(f"\nHey {name}!, Your Account Created Successfully.! \nYour Account Number is {accountNumber}.")
+
+#==========================================================================================================================================================================================================================
+
+'''
+Question : 03: 
+Transaction Count 
+Description: Add a menu option to display the total number of transactions for a specific 
+account. 
+Purpose: Teaches list length calculation and dictionary access. '''
+
+
+#Response
+
+def count_trans(account_number, transactions):
+
+    with open ("transactionHistory.txt", "r") as transactions:
+
+        return len(transactions.get(account_number, []))
+
+
+#========================================================================================================================================================================================
+'''
+Question : 04:
+Transaction Type Summary 
+Description: Add a menu option to display the number of deposits and withdrawals for a 
+specific account, based on data in transactions.txt. 
+Purpose: Introduces list iteration, string parsing, and conditional counting. 
+Implementation: 
+Create a function transaction_type_summary(account_number, transactions) that: Checks if 
+account_number exists in transactions and has transactions.'''
+
+#Response
+
+def transActivity(account_num):
+    print("\n-*-*-*-*-*-View Transaction Activity [Unicom-Online-Banking] -*-*-*-*-*-*-")
+    find = False
+    try:
+        with open("transactionHistory.txt", "r") as file:
+            for line in file:
+                data = line.strip().split(",")
+                if data[0] == account_num:
+                    print(f"{data[1]} of Rs.{data[2]}")
+                    find = True
+        if not find:
+            print("Transaction History not Available!")
+    except FileNotFoundError:
+        print("No Transaction History File Found!")
+
 #Function - 01 
 #[Function For Generating Account Numbers]
 
@@ -22,8 +129,10 @@ def generateAc_num():
 #Function - 02
 #[Function For Create Account ]
 
+#This Function Commanded by Me (Sayuvannan) Bcz Of I need To be Update for my Viva Exam [Reason]
 
-def createAccount():
+
+'''def createAccount():
 
     print("\n-*-*-*-*-*-Create [Unicom-Online-Banking] Account-*-*-*-*-*-*-")
 
@@ -50,7 +159,7 @@ def createAccount():
     with open("accountDetails.txt", "a") as file:
         file.write(f"{accountNumber},{name},{password},{firstDep}\n")
 
-    print(f"\nHey {name}!, Your Account Created Successfully.! \nYour Account Number is {accountNumber}.")
+    print(f"\nHey {name}!, Your Account Created Successfully.! \nYour Account Number is {accountNumber}.")'''
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 #Function - 03
@@ -176,25 +285,6 @@ def check_balance(account_num):
     print("Account not Defined...!")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------
-#Function - 07
-#[Function For Transaction Activity ]
-
-
-
-def transActivity(account_num):
-    print("\n-*-*-*-*-*-View Transaction Activity [Unicom-Online-Banking] -*-*-*-*-*-*-")
-    find = False
-    try:
-        with open("transactionHistory.txt", "r") as file:
-            for line in file:
-                data = line.strip().split(",")
-                if data[0] == account_num:
-                    print(f"{data[1]} of Rs.{data[2]}")
-                    find = True
-        if not find:
-            print("Transaction History not Available!")
-    except FileNotFoundError:
-        print("No Transaction History File Found!")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 #Function - 08
@@ -209,8 +299,9 @@ def userMenu(account_num):
         print("01. Deposit Money --- [Enter: 1]")
         print("02. Withdraw Money --- [Enter: 2]")
         print("03. Check Balance --- [Enter: 3]")
-        print("04. View Transaction Activity --- [Enter: 4]")
-        print("05. Log-out/Exit --- [Enter: 5]")
+        print("04. View Transaction Activity --- [Enter: 4]")# Adding For Viva Question [Q4]
+        print("05. View Transactions Count --- [Enter: 5]") # Adding For Viva Question [Q3]
+        print("06. Log-out/Exit --- [Enter: 6]")
 
         try:
             choice = int(input("Enter Your Choice [1-5]: "))
@@ -226,9 +317,12 @@ def userMenu(account_num):
             check_balance(account_num)
         elif choice == 4:
             transActivity(account_num)
-        elif choice == 5:
+        elif choice == 6:
             print("Logging Out. Thank You For Choosing [Unicom-Online-Banking]!")
             break
+        elif choice == 5: #Adding For Viva [Q3]/////////////////////////////////////////////////
+            count_trans(account_num)#///////////////////////////////////////////////////////////
+
         else:
             print("Invalid Choice. Please Enter a number between [1-5].")
 
@@ -243,7 +337,7 @@ ADMIN_PASS = "sayu111"
 
 def admin_login():
     print("\n-*-*-*-*-*- Admin Login [Unicom-Online-Banking] -*-*-*-*-*-*-")
-    username = input("Enter Admin Username: ").strip()
+    username = input("Enter Admin Username: ").strip().title()
     password = input("Enter Admin Password: ").strip()
 
     if username == ADMIN_UNAME and password == ADMIN_PASS:
@@ -260,7 +354,7 @@ def admin_menu():
         print("2. View All Transactions")
         print("3. Delete a User Account")
         print("4. Search User by Account Number")
-        print("5. Exit Admin Panel")
+        print("5. Exit Admin")
 
         try:
             choice = int(input("Enter your choice [1-5]: "))
@@ -338,10 +432,13 @@ def search_account():
     print("Account not found.")
 
 
+#================================================================================================================================================================================
+
 
 # ===================== Main Control ========================
 
 print("\n-*-*-*-*-*- [Unicom-Online-Banking] -*-*-*-*-*-*-")
+show_current_date()
 print("1. Create a New Account [A]")
 print("2. Login to Existing Account [B]")
 print("3. Admin Login [C]") 
@@ -358,3 +455,7 @@ elif choice == "C":
     admin_login()
 else:
     print("Invalid Choice. Please Enter A, B, or C.")
+
+
+
+
